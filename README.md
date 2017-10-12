@@ -52,11 +52,6 @@ dependencies {
 
 # Android
 
-This code represent the server side part.To be more specific
-  * The HiddenServiceDir directive tells Tor where to look for the Hidden Service Directory containing the private key of the Hidden Service. Each Hidden Service Owns it's own directory. The directory needs to be created and having permissions of the Tor User.
- * The Hostname of your new Hidden Service will be available in the file hostname just created in your Hidden Service Directory
- * The tor directive tells in our Serversocket on which port to listen, to forward to which ip and to which port.
-
  If you want to run the library from the android studio emulator make sure that you will edit the AVD manager just like the printscreen below. An Android Virtual Device (AVD) is a configuration that defines the characteristics of an Android phone, tablet, Android Wear, or Android TV device that you want to simulate in the Android Emulator. The AVD Manager is an interface you can launch from Android Studio that helps you create and manage AVDs
 
 <p align="center">
@@ -70,6 +65,11 @@ From the Your Virtual Devices page, you can perform the following operations on 
   * To edit an AVD, click <b>Edit</b>   and make your changes.
   * To delete an AVD, right-click an AVD and select <b>Delete</b>. Or click Menu   and select <b>Delete</b>.
 
+This code represent the server side part.To be more specific
+  * The HiddenServiceDir directive tells Tor where to look for the Hidden Service Directory containing the private key of the Hidden Service. Each Hidden Service Owns it's own directory. The directory needs to be created and having permissions of the Tor User.
+ * The Hostname of your new Hidden Service will be available in the file hostname just created in your Hidden Service Directory
+ * The tor directive tells in our Serversocket on which port to listen, to forward to which ip and to which port.
+ 
 ```java
 import android.content.Context;
 

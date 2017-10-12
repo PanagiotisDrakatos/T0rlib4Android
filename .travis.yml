@@ -1,0 +1,88 @@
+language: android
+sudo: required
+
+android:
+  components:
+    - tools # needs to be first to get new package versions
+    - build-tools-25.0.2
+    - platform-tools
+    - add-on
+    - extra
+  licenses:
+    - 'android-sdk-preview-license-52d11cd2'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+    - 'intel-android-extra-license-.+'
+    - 'mips-android-sysimage-license-.+'
+    - '.+'
+
+jdk:
+  - oraclejdk8
+
+before_script:
+   #######################################
+   #
+   # Gradle
+   #
+   ######################################
+
+   # Add gradle properties
+   - touch $HOME/.gradle/gradle.properties
+   # Disable gradle daemon
+   - echo 'org.gradle.daemon=false' > $HOME/.gradle/gradle.properties
+   # Ensure all dependencies are installed before building
+   - ./gradlew dependencies || true
+
+   #######################################
+   #
+   # Android SDK
+   #
+   ######################################
+   - mkdir "$ANDROID_HOME/licenses" || true
+   - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+
+   #######################################
+   #
+   # Google Cloud SDK
+   #
+   ######################################
+   - wget -q https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-167.0.0-linux-x86_64.tar.gz
+   - tar xzf google-cloud-sdk-167.0.0-linux-x86_64.tar.gz
+   - ./google-cloud-sdk/install.sh --usage-reporting=true --path-update=false --bash-completion=false --additional-components alpha beta gcloud gsutil
+   - rm -rf google-cloud-sdk-167.0.0-linux-x86_64.tar.gz
+   - ./google-cloud-sdk/bin/gcloud config set --installation component_manager/disable_update_check true
+
+   #######################################
+   #
+   # Android NDK Setup
+   #
+   ######################################
+   - pushd ~
+   - wget -q https://dl.google.com/android/repository/android-ndk-r12b-linux-x86_64.zip
+   - unzip -qo android-ndk-r12b-linux-x86_64.zip
+   - export ANDROID_NDK_HOME="$HOME/android-ndk-r12b"
+   - popd
+   
+before_install:
+ - mkdir "$ANDROID_HOME/licenses" || true
+ - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+ - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+ - chmod +x gradlew
+ - ./gradlew dependencies || true 
+ 
+install:
+  - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
+  - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+ 
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+    
+
+script:
+- "./gradlew assembleDebug --stacktrace"

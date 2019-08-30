@@ -70,14 +70,14 @@ public class AndroidOnionProxyContext extends OnionProxyContext {
     System.out.println(arch);
     String exec = "tor.";
     if (arch.contains("64")) {
-      if (arch.contains("arm"))
+      if (arch.contains("arm") || arch.contains("aar"))
         return exec + Arch.ARM64.name().toLowerCase();
       else if (arch.contains("mips"))
         return exec + Arch.MIPS64.name().toLowerCase();
       else if (arch.contains("86") || arch.contains("amd"))
         return exec + Arch.AMD64.name().toLowerCase();
     } else {
-      if (arch.contains("arm"))
+      if (arch.contains("arm") || arch.contains("aar"))
         return exec + Arch.ARM.name().toLowerCase();
       else if (arch.contains("mips"))
         return exec + Arch.MIPS.name().toLowerCase();
